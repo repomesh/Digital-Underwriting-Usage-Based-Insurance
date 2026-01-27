@@ -1,0 +1,36 @@
+db.getCollection("customerTripDaily").aggregate(
+
+[
+  {
+    '$group': {
+      '_id': {
+        'year': '$_id.date.year', 
+        'month': '$_id.date.month', 
+        'customerId': '$_id.customerId'
+      }, 
+      'totalDistance': {
+        '$sum': '$totalDistance'
+      }
+    }
+  }, {
+    '$project': {
+      '_id' : 1,
+      'totalDistance': {
+        '$round': [
+          '$totalDistance', 1
+        ]
+      }
+    }
+  }, {
+    '$addFields': {
+      'viewUpdateTimestamp': new Date()
+    }
+  }, 
+  {
+    '$merge': {
+      'into': 'customerTripMonthly', 
+      'whenMatched': 'replace'
+    }
+  }
+]
+)

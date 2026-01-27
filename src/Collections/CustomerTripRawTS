@@ -1,0 +1,10 @@
+db.createCollection(
+    "customerTripRaw",
+    {
+       timeseries: {
+          timeField: "timestamp",
+          metaField: "metadata",
+          granularity: "minutes"
+       }
+    }
+)
